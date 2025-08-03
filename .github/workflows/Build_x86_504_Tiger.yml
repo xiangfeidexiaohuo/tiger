@@ -61,6 +61,7 @@ jobs:
         sed -i "s/KERNEL_TESTING_PATCHVER:=*.*/KERNEL_TESTING_PATCHVER:=5.4/g" target/linux/x86/Makefile       
 
         sed -i "s/DISTRIB_DESCRIPTION='*.*'/DISTRIB_DESCRIPTION='Tiger-X86-Stable-$(date +%Y%m%d)'/g" package/lean/default-settings/files/zzz-default-settings
+        sed -i "s/OPENWRT_RELEASE=\"*.*\"/OPENWRT_RELEASE=\"Tiger-X86-Stable-$(date +%Y%m%d) By Aaron\"/g" package/base-files/files/usr/lib/os-release
         
         
     - name: Configuration Customization - Build_x86_504_Tiger
@@ -97,26 +98,36 @@ jobs:
         }
         
         rom=openwrt/bin/targets/x86/64/openwrt-x86-64-generic-squashfs-combined-efi.img.gz
-        getmd5 $rom
-                
+        getmd5 $rom               
         cp -a $rom ./X86_Out/Tiger-X86-Stable-5.4-$(date +%Y%m%d)_${md5}.img.gz
+
+        rom=openwrt/bin/targets/x86/64/openwrt-x86-64-generic-rootfs.tar.gz
+        getmd5 $rom
+        cp -a $rom ./X86_Out/Tiger-X86-rootfs-$(date +%Y%m%d)_${md5}.tar.gz
+
                
     - name: Upload Firmwares
       uses: actions/upload-artifact@main
       with:
-        name: X86-OpenWrt-5.4-Tiger
+        name: TigerWrt-5.4
         path: X86_Out/*.img.gz
 
-    - name: Upload config
+    - name: Upload Rootfs
       uses: actions/upload-artifact@main
       with:
-        name: X86-5.4-Tiger-config
+        name: Tiger-rootfs
+        path: X86_Out/*.tar.gz
+
+    - name: Upload Config
+      uses: actions/upload-artifact@main
+      with:
+        name: Tiger-config
         path: X86_Out/x86_504_Tiger.config
 
     - name: Upload Packages
       uses: actions/upload-artifact@main
       with:
-        name: X86-504-Packages
+        name: Tiger-packages
         path: openwrt/bin/packages
         
     - name: Generate Tag & Release Name
