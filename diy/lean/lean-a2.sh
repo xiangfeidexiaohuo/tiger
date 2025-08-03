@@ -60,6 +60,11 @@ cp -af feeds/extraipk/patch/diy/banner-a  package/base-files/files/etc/banner
 sed -i "2iuci set istore.istore.channel='ae86_daodao'" package/lean/default-settings/files/zzz-default-settings
 sed -i "3iuci commit istore" package/lean/default-settings/files/zzz-default-settings
 
+##
+sed -i "s/DISTRIB_ID='*.*'/DISTRIB_ID='TigerWrt'/g" package/base-files/files/etc/openwrt_release
+date '+%Y%m%d%H' > package/base-files/files/etc/openwrt_version
+sed -i "s/NAME=\"*.*\"/NAME=\"TigerWrt\"/g" package/base-files/files/usr/lib/os-release
+
 
 ##更改主机名
 sed -i "s/hostname='.*'/hostname='Tiger'/g" package/base-files/files/bin/config_generate
